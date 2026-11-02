@@ -1,0 +1,5 @@
+.pie {
+  margin: var(--espacio-5) 0 0;
+  text-align: center;
+  color: var(--color-texto-suave);
+}

@@ -1,0 +1,36 @@
+<section class="pagina">
+  <header class="encabezado">
+    <h1>Confesiones</h1>
+    <div class="controles">
+      <select>
+        <option>Más recientes</option>
+        <option>Más me gusta</option>
+      </select>
+      <button type="button" class="boton">Nueva confesión</button>
+    </div>
+  </header>
+
+  @for (publicacion of publicaciones; track publicacion.titulo) {
+    <article class="tarjeta publicacion">
+      <div class="autor">
+        <span class="avatar">{{ publicacion.autor[0].toUpperCase() }}</span>
+        <div>
+          <strong>{{ publicacion.autor }}</strong>
+          <small>{{ publicacion.fecha }}</small>
+        </div>
+      </div>
+      <h2>{{ publicacion.titulo }}</h2>
+      <p>{{ publicacion.mensaje }}</p>
+      <footer>
+        <span class="me-gusta">♥ {{ publicacion.meGusta }}</span>
+        <span class="enlace">Ver comentarios</span>
+      </footer>
+    </article>
+  }
+
+  <div class="paginador">
+    <button type="button" class="boton boton-secundario" disabled>Anterior</button>
+    <span>Página 1 de 1</span>
+    <button type="button" class="boton boton-secundario" disabled>Siguiente</button>
+  </div>
+</section>

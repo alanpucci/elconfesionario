@@ -1,0 +1,35 @@
+.fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espacio-4);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal {
+  width: 100%;
+  max-width: 26rem;
+  border-top: 4px solid var(--color-primario);
+}
+
+.modal-error {
+  border-top-color: var(--color-peligro);
+}
+
+.modal h2 {
+  margin-bottom: var(--espacio-3);
+}
+
+.modal p {
+  margin: 0 0 var(--espacio-5);
+  color: var(--color-texto-suave);
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--espacio-3);
+}
