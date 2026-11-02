@@ -4,7 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {cors:true});
   const config = app.get(ConfigService);
 
   app.useGlobalPipes(
@@ -14,8 +14,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.enableCors({ origin: config.get<string>('FRONT_URL') });
+  app.enableCors();
 
   await app.listen(config.get<number>('PORT') ?? 3000);
 }
-await bootstrap();
+bootstrap();
