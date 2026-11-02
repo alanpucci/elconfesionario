@@ -25,56 +25,7 @@ select {
   font: inherit;
 }
 
-.publicacion {
-  margin-bottom: var(--espacio-4);
-}
-
-.autor {
-  display: flex;
-  align-items: center;
-  gap: var(--espacio-3);
-  margin-bottom: var(--espacio-3);
-}
-
-.autor small {
-  display: block;
+.vacio {
+  text-align: center;
   color: var(--color-texto-suave);
-}
-
-.avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background: var(--color-primario);
-  font-weight: 700;
-}
-
-.publicacion p {
-  margin: 0 0 var(--espacio-4);
-  color: var(--color-texto-suave);
-}
-
-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.me-gusta {
-  color: var(--color-peligro);
-}
-
-.paginador {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--espacio-4);
-  color: var(--color-texto-suave);
-}
-
-.enlace {
-  color: var(--color-primario);
 }

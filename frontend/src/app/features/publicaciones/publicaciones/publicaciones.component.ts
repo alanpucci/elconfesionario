@@ -1,44 +1,58 @@
-import { Component, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { ModalService } from '../../../core/modal.service';
+import { PaginadorComponent } from '../../../shared/paginador/paginador.component';
 import { NuevaPublicacionComponent } from '../nueva-publicacion/nueva-publicacion.component';
+import { PublicacionCardComponent } from '../publicacion-card/publicacion-card.component';
+import { OrdenPublicaciones, Publicacion } from '../publicacion.model';
+import { PublicacionesService } from '../publicaciones.service';
 
-interface PublicacionEjemplo {
-  autor: string;
-  fecha: string;
-  titulo: string;
-  mensaje: string;
-  meGusta: number;
-}
+const POR_PAGINA = 10;
 
 @Component({
   selector: 'app-publicaciones',
-  imports: [NuevaPublicacionComponent],
+  imports: [NuevaPublicacionComponent, PublicacionCardComponent, PaginadorComponent],
   templateUrl: './publicaciones.component.html',
   styleUrl: './publicaciones.component.css',
 })
-export class PublicacionesComponent {
-  protected readonly mostrandoFormulario = signal(false);
+export class PublicacionesComponent implements OnInit {
+  private readonly publicacionesService = inject(PublicacionesService);
+  private readonly modalService = inject(ModalService);
 
-  protected readonly publicaciones: PublicacionEjemplo[] = [
-    {
-      autor: 'ana.g',
-      fecha: 'hace 2 horas',
-      titulo: 'Nunca le dije a nadie',
-      mensaje: 'Hoy en el colectivo le devolví la billetera a un señor y me quedé pensando en lo bien que se siente hacer algo bueno sin que nadie lo sepa.',
-      meGusta: 12,
-    },
-    {
-      autor: 'lucas.m',
-      fecha: 'hace 1 día',
-      titulo: 'Me comí el último alfajor',
-      mensaje: 'Culpé al perro. El perro no tiene manera de defenderse y yo no tengo remordimientos.',
-      meGusta: 31,
-    },
-    {
-      autor: 'sofi_92',
-      fecha: 'hace 3 días',
-      titulo: 'Fingí que sabía de vinos',
-      mensaje: 'En la cena de la oficina elogié un tinto por su «cuerpo y estructura». Era jugo de uva.',
-      meGusta: 8,
-    },
-  ];
+  protected readonly porPagina = POR_PAGINA;
+  protected readonly mostrandoFormulario = signal(false);
+  protected readonly cargando = signal(false);
+  protected readonly publicaciones = signal<Publicacion[]>([]);
+  protected readonly total = signal(0);
+  protected readonly offset = signal(0);
+  protected readonly orden = signal<OrdenPublicaciones>('fecha');
+
+  ngOnInit() {
+    this.cargar();
+  }
+
+  protected cambiarOrden(evento: Event) {
+    this.orden.set((evento.target as HTMLSelectElement).value as OrdenPublicaciones);
+    this.cargar(0);
+  }
+
+  protected publicada() {
+    this.mostrandoFormulario.set(false);
+    this.cargar(0);
+  }
+
+  protected async cargar(offset = this.offset()) {
+    this.cargando.set(true);
+    try {
+      const pagina = await this.publicacionesService.listar(this.orden(), offset, POR_PAGINA);
+      this.publicaciones.set(pagina.datos);
+      this.total.set(pagina.total);
+      this.offset.set(pagina.offset);
+    } catch (error) {
+      if ((error as HttpErrorResponse).status !== 401) {
+        this.modalService.mostrarError('No pudimos cargar las confesiones');
+      }
+    }
+    this.cargando.set(false);
+  }
 }

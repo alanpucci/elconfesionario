@@ -1,14 +1,23 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Publicacion } from './publicacion.model';
+import { Paginado } from '../../core/paginado.model';
+import { OrdenPublicaciones, Publicacion } from './publicacion.model';
 
 @Injectable({ providedIn: 'root' })
 export class PublicacionesService {
   private readonly http = inject(HttpClient);
 
-  crear(formData: FormData) {
-    return firstValueFrom(this.http.post<Publicacion>(`${environment.apiUrl}/publicaciones`, formData));
+  async crear(formData: FormData) {
+    await firstValueFrom(this.http.post(`${environment.apiUrl}/publicaciones`, formData));
+  }
+
+  listar(orden: OrdenPublicaciones, offset: number, limit: number, usuarioId = '') {
+    let params = new HttpParams().set('orden', orden).set('offset', offset).set('limit', limit);
+    if (usuarioId) {
+      params = params.set('usuarioId', usuarioId);
+    }
+    return firstValueFrom(this.http.get<Paginado<Publicacion>>(`${environment.apiUrl}/publicaciones`, { params }));
   }
 }

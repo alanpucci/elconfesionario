@@ -33,7 +33,7 @@ Ya resuelto en S1 y que no se rehace: JWT en login/registro, `CloudinaryService`
 - **Validar:** con imagen y sin imagen → 201 y documento en Atlas; imagen de 3 MB o `.gif` → 400; sin token → 401.
 - **Depende de:** S2-02
 
-### [ ] S2-04 · Back: listado — GET /publicaciones (E-06)
+### [~] S2-04 · Back: listado — GET /publicaciones (E-06)
 - **Qué:** `ListarPublicacionesQueryDto` (orden, usuarioId, offset, limit, comentarios con `@Type`, `@Min`, `@Max`) y `PublicacionesService.listar` con el pipeline del Doc 2 §7.1–7.3: solo activas, orden por fecha o `cantidadMeGusta` (empate por fecha), `meGustaDado`, autor sin datos sensibles, comentarios opcionales. Responde `{ datos, total, offset, limit }`.
 - **Concepto clave:** aggregation con `$facet`/`$lookup` y paginación por offset.
 - **Docs:** Doc 2 §7.1, §7.2, §7.3 · Doc 1 E-06, RF-17, RF-18, RF-20.

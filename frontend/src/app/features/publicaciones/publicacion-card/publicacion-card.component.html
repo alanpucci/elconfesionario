@@ -1,0 +1,23 @@
+@if (publicacion(); as publicacion) {
+  <article class="tarjeta publicacion">
+    <div class="autor">
+      @if (publicacion.usuario.imagenPerfilUrl) {
+        <img class="avatar" [src]="publicacion.usuario.imagenPerfilUrl" [alt]="publicacion.usuario.nombreUsuario" />
+      } @else {
+        <span class="avatar">{{ publicacion.usuario.nombreUsuario[0].toUpperCase() }}</span>
+      }
+      <div>
+        <strong>{{ publicacion.usuario.nombreUsuario }}</strong>
+        <small>{{ publicacion.createdAt | tiempoRelativo }}</small>
+      </div>
+    </div>
+    <h2>{{ publicacion.titulo }}</h2>
+    <p>{{ publicacion.mensaje }}</p>
+    @if (publicacion.imagenUrl) {
+      <img class="imagen" [src]="publicacion.imagenUrl" [alt]="publicacion.titulo" />
+    }
+    <footer>
+      <span class="me-gusta">{{ publicacion.meGustaDado ? '♥' : '♡' }} {{ publicacion.cantidadMeGusta }}</span>
+    </footer>
+  </article>
+}

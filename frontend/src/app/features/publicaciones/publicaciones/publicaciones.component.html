@@ -2,39 +2,27 @@
   <header class="encabezado">
     <h1>Confesiones</h1>
     <div class="controles">
-      <select>
-        <option>Más recientes</option>
-        <option>Más me gusta</option>
+      <select [value]="orden()" (change)="cambiarOrden($event)">
+        <option value="fecha">Más recientes</option>
+        <option value="meGusta">Más me gusta</option>
       </select>
       <button type="button" class="boton" (click)="mostrandoFormulario.set(true)">Nueva confesión</button>
     </div>
   </header>
 
-  @for (publicacion of publicaciones; track publicacion.titulo) {
-    <article class="tarjeta publicacion">
-      <div class="autor">
-        <span class="avatar">{{ publicacion.autor[0].toUpperCase() }}</span>
-        <div>
-          <strong>{{ publicacion.autor }}</strong>
-          <small>{{ publicacion.fecha }}</small>
-        </div>
-      </div>
-      <h2>{{ publicacion.titulo }}</h2>
-      <p>{{ publicacion.mensaje }}</p>
-      <footer>
-        <span class="me-gusta">♥ {{ publicacion.meGusta }}</span>
-        <span class="enlace">Ver comentarios</span>
-      </footer>
-    </article>
+  @for (publicacion of publicaciones(); track publicacion._id) {
+    <app-publicacion-card [publicacion]="publicacion" />
+  } @empty {
+    @if (!cargando()) {
+      <p class="vacio">Todavía no hay confesiones. ¡Sé el primero en confesar!</p>
+    }
   }
 
-  <div class="paginador">
-    <button type="button" class="boton boton-secundario" disabled>Anterior</button>
-    <span>Página 1 de 1</span>
-    <button type="button" class="boton boton-secundario" disabled>Siguiente</button>
-  </div>
+  @if (total() > 0) {
+    <app-paginador [total]="total()" [offset]="offset()" [limit]="porPagina" (cambiado)="cargar($event)" />
+  }
 </section>
 
 @if (mostrandoFormulario()) {
-  <app-nueva-publicacion (publicada)="mostrandoFormulario.set(false)" (cancelada)="mostrandoFormulario.set(false)" />
+  <app-nueva-publicacion (publicada)="publicada()" (cancelada)="mostrandoFormulario.set(false)" />
 }
