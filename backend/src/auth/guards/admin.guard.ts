@@ -4,16 +4,17 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { PeticionAutenticada } from './jwt-auth.guard.js';
+import { AuthService } from '../auth.service.js';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-  canActivate(contexto: ExecutionContext) {
-    const { usuario } = contexto
-      .switchToHttp()
-      .getRequest<PeticionAutenticada>();
+  constructor(private readonly authService: AuthService) {}
 
-    if (usuario?.perfil !== 'administrador') {
+  async canActivate(contexto: ExecutionContext) {
+    const peticion = contexto.switchToHttp().getRequest();
+    const usuario = await this.authService.obtenerUsuarioDelToken(peticion);
+
+    if (usuario.perfil !== 'administrador') {
       throw new ForbiddenException('No tenés permisos para esta acción');
     }
     return true;
