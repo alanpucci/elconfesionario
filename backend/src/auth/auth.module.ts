@@ -5,6 +5,8 @@ import { CloudinaryModule } from '../cloudinary/cloudinary.module.js';
 import { UsuariosModule } from '../usuarios/usuarios.module.js';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
+import { AdminGuard } from './guards/admin.guard.js';
+import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { AuthService } from './auth.service.js';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtAuthGuard, AdminGuard],
+  exports: [JwtModule, UsuariosModule, JwtAuthGuard, AdminGuard],
 })
 export class AuthModule {}
