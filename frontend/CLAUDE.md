@@ -41,6 +41,14 @@
   recalcula en cada ciclo de detección, y es aceptable.
 - Preferir signals o `async` pipe sobre subscribes manuales sin unsubscribe.
 
+### Asincronía
+- Usar solamente `async/await`. Los servicios que llaman al back exponen
+  métodos `async` que convierten el Observable de `HttpClient` con
+  `firstValueFrom` y devuelven el resultado; los errores se manejan con
+  `try/catch` en quien los llama.
+- **PROHIBIDO `tap()`** y encadenar operadores con `.pipe()` para efectos
+  secundarios. Tampoco usar `.subscribe()` para consumir peticiones HTTP.
+
 ### Inputs / outputs
 - Usar `input()` y `output()`.
 - **PROHIBIDO `input.required()`.**

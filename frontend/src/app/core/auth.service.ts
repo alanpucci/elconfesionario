@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Usuario } from '../features/usuarios/usuario.model';
 import { CredencialesLogin, RespuestaAuth } from './auth.model';
@@ -15,16 +15,18 @@ export class AuthService {
 
   readonly usuarioActual = signal<Usuario | null>(null);
 
-  registrar(formData: FormData) {
-    return this.http
-      .post<RespuestaAuth>(`${environment.apiUrl}/auth/registro`, formData)
-      .pipe(tap((respuesta) => this.iniciarSesion(respuesta)));
+  async registrar(formData: FormData) {
+    const respuesta = await firstValueFrom(
+      this.http.post<RespuestaAuth>(`${environment.apiUrl}/auth/registro`, formData),
+    );
+    this.iniciarSesion(respuesta);
   }
 
-  login(credenciales: CredencialesLogin) {
-    return this.http
-      .post<RespuestaAuth>(`${environment.apiUrl}/auth/login`, credenciales)
-      .pipe(tap((respuesta) => this.iniciarSesion(respuesta)));
+  async login(credenciales: CredencialesLogin) {
+    const respuesta = await firstValueFrom(
+      this.http.post<RespuestaAuth>(`${environment.apiUrl}/auth/login`, credenciales),
+    );
+    this.iniciarSesion(respuesta);
   }
 
   cerrarSesion() {
