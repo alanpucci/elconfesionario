@@ -1,0 +1,39 @@
+<div class="fondo" (click)="cancelada.emit()">
+  <div class="panel tarjeta" (click)="$event.stopPropagation()">
+    <h2>Nueva confesión</h2>
+    <form [formGroup]="formulario" (ngSubmit)="enviar()">
+      <div class="campo">
+        <label for="titulo">Título</label>
+        <input id="titulo" type="text" formControlName="titulo" />
+        <span class="ayuda-campo">{{ longitud('titulo') }}/100</span>
+        <span class="error-campo">{{ mensajeError('titulo') }}</span>
+      </div>
+
+      <div class="campo">
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" formControlName="mensaje"></textarea>
+        <span class="ayuda-campo">{{ longitud('mensaje') }}/1000</span>
+        <span class="error-campo">{{ mensajeError('mensaje') }}</span>
+      </div>
+
+      <div class="campo">
+        <label for="imagen">Imagen (opcional)</label>
+        <input id="imagen" type="file" accept="image/jpeg,image/png,image/webp" (change)="seleccionarImagen($event)" />
+        <span class="error-campo">{{ errorImagen() }}</span>
+        @if (vistaPrevia()) {
+          <img class="vista-previa" [src]="vistaPrevia()" alt="Vista previa" />
+        }
+      </div>
+
+      <div class="acciones">
+        <button type="button" class="boton boton-secundario" (click)="cancelada.emit()">Cancelar</button>
+        <button type="submit" class="boton" [disabled]="formulario.invalid || cargando()">
+          @if (cargando()) {
+            <span class="giro"></span>
+          }
+          Publicar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

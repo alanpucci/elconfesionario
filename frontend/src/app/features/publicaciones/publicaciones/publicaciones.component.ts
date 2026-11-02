@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { NuevaPublicacionComponent } from '../nueva-publicacion/nueva-publicacion.component';
 
 interface PublicacionEjemplo {
   autor: string;
@@ -10,10 +11,13 @@ interface PublicacionEjemplo {
 
 @Component({
   selector: 'app-publicaciones',
+  imports: [NuevaPublicacionComponent],
   templateUrl: './publicaciones.component.html',
   styleUrl: './publicaciones.component.css',
 })
 export class PublicacionesComponent {
+  protected readonly mostrandoFormulario = signal(false);
+
   protected readonly publicaciones: PublicacionEjemplo[] = [
     {
       autor: 'ana.g',

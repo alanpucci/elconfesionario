@@ -6,7 +6,7 @@
         <option>Más recientes</option>
         <option>Más me gusta</option>
       </select>
-      <button type="button" class="boton">Nueva confesión</button>
+      <button type="button" class="boton" (click)="mostrandoFormulario.set(true)">Nueva confesión</button>
     </div>
   </header>
 
@@ -34,3 +34,7 @@
     <button type="button" class="boton boton-secundario" disabled>Siguiente</button>
   </div>
 </section>
+
+@if (mostrandoFormulario()) {
+  <app-nueva-publicacion (publicada)="mostrandoFormulario.set(false)" (cancelada)="mostrandoFormulario.set(false)" />
+}
