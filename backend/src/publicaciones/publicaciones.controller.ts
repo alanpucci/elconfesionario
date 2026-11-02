@@ -4,16 +4,17 @@ import {
   Get,
   Post,
   Query,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import type { Request } from 'express';
 import { memoryStorage } from 'multer';
-import { UsuarioActual } from '../auth/decorators/usuario-actual.decorator.js';
+import { AuthService } from '../auth/auth.service.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { crearPipeImagen } from '../comun/validadores/imagen.validator.js';
-import type { UsuarioDocument } from '../usuarios/esquemas/usuario.schema.js';
 import { CrearPublicacionDto } from './dto/crear-publicacion.dto.js';
 import { ListarPublicacionesQueryDto } from './dto/listar-publicaciones-query.dto.js';
 import { PublicacionesService } from './publicaciones.service.js';
@@ -21,23 +22,28 @@ import { PublicacionesService } from './publicaciones.service.js';
 @Controller('publicaciones')
 @UseGuards(JwtAuthGuard)
 export class PublicacionesController {
-  constructor(private readonly publicacionesService: PublicacionesService) {}
+  constructor(
+    private readonly publicacionesService: PublicacionesService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get()
-  listar(
+  async listar(
     @Query() query: ListarPublicacionesQueryDto,
-    @UsuarioActual() usuario: UsuarioDocument,
+    @Req() peticion: Request,
   ) {
+    const usuario = await this.authService.obtenerUsuarioDelToken(peticion);
     return this.publicacionesService.listar(query, usuario);
   }
 
   @Post()
   @UseInterceptors(FileInterceptor('imagen', { storage: memoryStorage() }))
-  crear(
+  async crear(
     @Body() dto: CrearPublicacionDto,
-    @UsuarioActual() usuario: UsuarioDocument,
+    @Req() peticion: Request,
     @UploadedFile(crearPipeImagen()) imagen?: Express.Multer.File,
   ) {
+    const usuario = await this.authService.obtenerUsuarioDelToken(peticion);
     return this.publicacionesService.crear(dto, usuario, imagen);
   }
 }
