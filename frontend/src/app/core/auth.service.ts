@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Usuario } from '../features/usuarios/usuario.model';
 import { CredencialesLogin, RespuestaAuth } from './auth.model';
@@ -15,18 +14,12 @@ export class AuthService {
 
   readonly usuarioActual = signal<Usuario | null>(null);
 
-  async registrar(formData: FormData) {
-    const respuesta = await firstValueFrom(
-      this.http.post<RespuestaAuth>(`${environment.apiUrl}/auth/registro`, formData),
-    );
-    this.iniciarSesion(respuesta);
+  registrar(formData: FormData) {
+    return this.http.post<RespuestaAuth>(`${environment.apiUrl}/auth/registro`, formData);
   }
 
-  async login(credenciales: CredencialesLogin) {
-    const respuesta = await firstValueFrom(
-      this.http.post<RespuestaAuth>(`${environment.apiUrl}/auth/login`, credenciales),
-    );
-    this.iniciarSesion(respuesta);
+  login(credenciales: CredencialesLogin) {
+    return this.http.post<RespuestaAuth>(`${environment.apiUrl}/auth/login`, credenciales);
   }
 
   cerrarSesion() {
@@ -35,7 +28,7 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  private iniciarSesion(respuesta: RespuestaAuth) {
+  iniciarSesion(respuesta: RespuestaAuth) {
     this.tokenService.guardar(respuesta.token);
     this.usuarioActual.set(respuesta.usuario);
   }

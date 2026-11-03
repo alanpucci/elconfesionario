@@ -4,20 +4,21 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
   {
     path: 'login',
-    loadComponent: () => import('./features/autenticacion/login/login.component').then((m) => m.LoginComponent),
+    loadComponent: async () => (await import('./features/autenticacion/login/login.component')).LoginComponent,
   },
   {
     path: 'registro',
-    loadComponent: () => import('./features/autenticacion/registro/registro.component').then((m) => m.RegistroComponent),
+    loadComponent: async () =>
+      (await import('./features/autenticacion/registro/registro.component')).RegistroComponent,
   },
   {
     path: 'publicaciones',
-    loadComponent: () =>
-      import('./features/publicaciones/publicaciones/publicaciones.component').then((m) => m.PublicacionesComponent),
+    loadComponent: async () =>
+      (await import('./features/publicaciones/publicaciones/publicaciones.component')).PublicacionesComponent,
   },
   {
     path: 'mi-perfil',
-    loadComponent: () => import('./features/perfil/mi-perfil/mi-perfil.component').then((m) => m.MiPerfilComponent),
+    loadComponent: async () => (await import('./features/perfil/mi-perfil/mi-perfil.component')).MiPerfilComponent,
   },
   { path: '**', redirectTo: 'publicaciones' },
 ];

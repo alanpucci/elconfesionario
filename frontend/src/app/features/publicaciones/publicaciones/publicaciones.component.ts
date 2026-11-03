@@ -41,18 +41,21 @@ export class PublicacionesComponent implements OnInit {
     this.cargar(0);
   }
 
-  protected async cargar(offset = this.offset()) {
+  protected cargar(offset = this.offset()) {
     this.cargando.set(true);
-    try {
-      const pagina = await this.publicacionesService.listar(this.orden(), offset, POR_PAGINA);
-      this.publicaciones.set(pagina.datos);
-      this.total.set(pagina.total);
-      this.offset.set(pagina.offset);
-    } catch (error) {
-      if ((error as HttpErrorResponse).status !== 401) {
-        this.modalService.mostrarError('No pudimos cargar las confesiones');
-      }
-    }
-    this.cargando.set(false);
+    this.publicacionesService.listar(this.orden(), offset, POR_PAGINA).subscribe({
+      next: (pagina) => {
+        this.publicaciones.set(pagina.datos);
+        this.total.set(pagina.total);
+        this.offset.set(pagina.offset);
+        this.cargando.set(false);
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.status !== 401) {
+          this.modalService.mostrarError('No pudimos cargar las confesiones');
+        }
+        this.cargando.set(false);
+      },
+    });
   }
 }

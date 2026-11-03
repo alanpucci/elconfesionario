@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Paginado } from '../../core/paginado.model';
 import { OrdenPublicaciones, Publicacion } from './publicacion.model';
@@ -9,8 +8,8 @@ import { OrdenPublicaciones, Publicacion } from './publicacion.model';
 export class PublicacionesService {
   private readonly http = inject(HttpClient);
 
-  async crear(formData: FormData) {
-    await firstValueFrom(this.http.post(`${environment.apiUrl}/publicaciones`, formData));
+  crear(formData: FormData) {
+    return this.http.post(`${environment.apiUrl}/publicaciones`, formData);
   }
 
   listar(orden: OrdenPublicaciones, offset: number, limit: number, usuarioId = '') {
@@ -18,6 +17,6 @@ export class PublicacionesService {
     if (usuarioId) {
       params = params.set('usuarioId', usuarioId);
     }
-    return firstValueFrom(this.http.get<Paginado<Publicacion>>(`${environment.apiUrl}/publicaciones`, { params }));
+    return this.http.get<Paginado<Publicacion>>(`${environment.apiUrl}/publicaciones`, { params });
   }
 }

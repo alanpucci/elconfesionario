@@ -75,7 +75,7 @@ export class NuevaPublicacionComponent {
     lector.readAsDataURL(archivo);
   }
 
-  protected async enviar() {
+  protected enviar() {
     if (this.formulario.invalid || this.errorImagen()) {
       this.formulario.markAllAsTouched();
       return;
@@ -91,15 +91,17 @@ export class NuevaPublicacionComponent {
     }
 
     this.cargando.set(true);
-    try {
-      await this.publicacionesService.crear(formData);
-      this.cargando.set(false);
-      this.publicada.emit();
-      this.modalService.mostrarInfo('Tu confesión fue publicada.');
-    } catch (error) {
-      this.cargando.set(false);
-      this.modalService.mostrarError(this.mensajeDe(error as HttpErrorResponse));
-    }
+    this.publicacionesService.crear(formData).subscribe({
+      next: () => {
+        this.cargando.set(false);
+        this.publicada.emit();
+        this.modalService.mostrarInfo('Tu confesión fue publicada.');
+      },
+      error: (error: HttpErrorResponse) => {
+        this.cargando.set(false);
+        this.modalService.mostrarError(this.mensajeDe(error));
+      },
+    });
   }
 
   private mensajeDe(error: HttpErrorResponse) {

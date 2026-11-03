@@ -41,21 +41,24 @@ export class LoginComponent {
     return '';
   }
 
-  protected async ingresar() {
+  protected ingresar() {
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
       return;
     }
 
     this.cargando.set(true);
-    try {
-      await this.authService.login(this.formulario.value as { correo: string; contrasena: string });
-      this.cargando.set(false);
-      this.router.navigate(['/publicaciones']);
-    } catch (error) {
-      this.cargando.set(false);
-      this.modalService.mostrarError(this.mensajeDe(error as HttpErrorResponse));
-    }
+    this.authService.login(this.formulario.value as { correo: string; contrasena: string }).subscribe({
+      next: (respuesta) => {
+        this.authService.iniciarSesion(respuesta);
+        this.cargando.set(false);
+        this.router.navigate(['/publicaciones']);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.cargando.set(false);
+        this.modalService.mostrarError(this.mensajeDe(error));
+      },
+    });
   }
 
   private mensajeDe(error: HttpErrorResponse) {
