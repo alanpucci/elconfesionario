@@ -23,16 +23,16 @@
     </div>
   }
 
-  <h2 class="subtitulo">Mis últimas confesiones</h2>
-  @for (publicacion of publicacionesEjemplo; track publicacion.titulo) {
-    <article class="tarjeta publicacion">
-      <h3>{{ publicacion.titulo }}</h3>
-      <small>{{ publicacion.fecha }}</small>
-      @for (comentario of publicacion.comentarios; track comentario) {
-        <p class="comentario">{{ comentario }}</p>
-      } @empty {
-        <p class="comentario">Sin comentarios</p>
-      }
-    </article>
+  <h2 class="subtitulo">Mis confesiones</h2>
+  @for (publicacion of publicaciones(); track publicacion._id) {
+    <app-publicacion-card [publicacion]="publicacion" />
+  } @empty {
+    @if (!cargando()) {
+      <p>Todavía no publicaste ninguna confesión.</p>
+    }
+  }
+
+  @if (total() > 0) {
+    <app-paginador [total]="total()" [offset]="offset()" [limit]="porPagina" (cambiado)="cargar($event)" />
   }
 </section>

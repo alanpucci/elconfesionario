@@ -34,22 +34,3 @@
 .subtitulo {
   margin: var(--espacio-6) 0 var(--espacio-4);
 }
-
-.publicacion {
-  margin-bottom: var(--espacio-4);
-}
-
-.publicacion h3 {
-  margin-bottom: var(--espacio-1);
-}
-
-.publicacion small {
-  color: var(--color-texto-suave);
-}
-
-.comentario {
-  margin: var(--espacio-2) 0 0;
-  padding-left: var(--espacio-3);
-  border-left: 2px solid var(--color-borde);
-  color: var(--color-texto-suave);
-}
